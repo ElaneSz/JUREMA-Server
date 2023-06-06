@@ -1,4 +1,8 @@
 POST http://127.0.0.1:3000/medicao HTTP/1.1
 content-type: application/json
 
-{"umidade":5,"temperatura":32,"ninho":2}
+{
+  "umidade": 5,
+  "temperatura": 32,
+  "ninho": 2
+}
