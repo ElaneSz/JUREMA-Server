@@ -13,6 +13,7 @@
 npm init -y
 npm i express sqlite3
 git init
+git remote add origin https://github.com/ElaneSz/JUREMA-Server.git
 ```
 
 ## Inicializando o Projeto
