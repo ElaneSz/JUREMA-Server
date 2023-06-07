@@ -7,7 +7,7 @@ const char ssid[] = "login";
 const char psw[] = "senha";
 
 // Site remoto - Coloque aqui os dados do site que vai receber a requisição GET
-const char http_site[] = "http://localhost:3000";
+const char http_site[] = "http://localhost:3000/medicao";
 const int http_port = 3000;
 
 // Variáveis globais
