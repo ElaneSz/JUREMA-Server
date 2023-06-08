@@ -8,7 +8,7 @@ const char ssid[] = "teste";
 const char psw[] = "testeia212022";
 
 // Site remoto - Coloque aqui os dados do site que vai receber a requisição GET
-const char http_site[] = "http://127.0.0.1:3000/medicao";
+const char http_site[] = "http://192.168.1.100:3000/medicao";
 const int http_port = 3000;
 
 // Variáveis globais
@@ -50,12 +50,12 @@ void loop() {
   float f_umidade = umidade;
   int f_ninho = ninho;
 
-  Serial.println("Gravando dados no BD: ");
-  Serial.print((int)temperatura); Serial.print(" °C, "); 
+  Serial.println("Gravando dados no BD: "); 
   Serial.print((int)umidade); Serial.println(" %");
-  char json[1024];  //Parâmetros com as leituras
-  snprintf(json, sizeof(json), "{\"umidade\": %.2f,\"temperatura\": %.2f,\"ninho\": %i}", f_umidade, f_temperatura, f_ninho);
-  Serial.println(json);
+  Serial.print((int)temperatura); Serial.print(" °C, ");
+  //char json[1024];  //Parâmetros com as leituras
+  //snprintf(json, sizeof(json), "{\"umidade\": %.2f,\"temperatura\": %.2f,\"ninho\": %i}", f_umidade, f_temperatura, f_ninho);
+  //Serial.println(json);
   Serial.print((int)ninho); 
   // Envio dos dados do sensor para o servidor via GET
   if ( !getPage((int)temperatura,(int)umidade,(int)ninho) ) {
@@ -70,9 +70,11 @@ bool getPage(float temperatura, float umidade, int ninho) {
     return false;
   }
   char json[1024];  //Parâmetros com as leituras
-  snprintf(json, sizeof(json), "{\"umidade\": %.2f,\"temperatura\": %.2f,\"ninho\": %i}", umidade, temperatura, ninho);
+  //snprintf(json, sizeof(json), "{\"umidade\": %.2f,\"temperatura\": %.2f,\"ninho\": %i}", umidade, temperatura, ninho);
   // Serial.println(json);
-  client.println("GET http://127.0.0.1:3000/medicao"+ json +"HTTP/1.1");
+  //============================================================================================
+  String parametros = "?umidade="+ String(f_umidade) + "&temperatura=" + String(f_temperatura) + "&ninho" + String(f_ninho);
+  client.println("POST http://192.168.1.100:3000/medicao?umidade="+ parametros +"HTTP/1.1");
   client.println("Host: ");
   client.println(http_site);      
   client.println("Connection: close");   

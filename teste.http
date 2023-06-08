@@ -4,5 +4,5 @@ content-type: application/json
 {
   "umidade": 20,
   "temperatura": 12,
-  "ninho": 2
+  "ninho": 70
 }
