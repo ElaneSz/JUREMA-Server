@@ -74,11 +74,11 @@ bool getPage(float temperatura, float umidade, int ninho) {
   // Serial.println(json);
   //============================================================================================
   String parametros = "?umidade="+ String(f_umidade) + "&temperatura=" + String(f_temperatura) + "&ninho" + String(f_ninho);
-  client.println("POST http://192.168.1.100:3000/medicao?umidade="+ parametros +"HTTP/1.1");
+  client.println("POST http://192.168.1.100:3000/medicao"+ parametros +"HTTP/1.1");
   client.println("Host: ");
-  client.println(http_site);      
-  client.println("Connection: close");   
-  client.println();        
+  client.println(http_site);
+  client.println("Connection: close");
+  client.println();
   client.println();
 
     // Informações de retorno do servidor para debug
