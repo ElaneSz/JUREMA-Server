@@ -1,65 +1,72 @@
+#include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
-#include <DHT.h> // Outra biblioteca
+#include <SimpleDHT.h>
 
-// Configurações de rede
-const char* ssid = "teste"; // Nome da sua rede Wi-Fi
-const char* password = "testeia212022"; // Senha da sua rede Wi-Fi
-const char* serverIP = "192.168.1.100"; // Endereço IP do servidor
-int serverPort = 3000; // Porta do servidor
+// Configurações de rede Wi-Fi
+const char* ssid = "teste";
+const char* password = "testeia212022";
 
-// Configurações do sensor DHT11
-#define DHTPIN D2 // Pino ao qual o sensor DHT11 está conectado
-#define DHTTYPE DHT11 // Tipo de sensor DHT
+// Configurações do servidor
+const char* serverURL = "http://192.168.1.100:"; // Talvez não precise do ":"
+const int serverPort = 3000;
+const String endpoint = "/medicao";
 
-// Objeto DHT para ler os valores do sensor
-DHT dht(DHTPIN, DHTTYPE);
+// Pino do sensor DHT11
+const int dht11Pin = D2;
+
+SimpleDHT11 dht11;
 
 void setup() {
   Serial.begin(115200);
 
-  // Conecte-se à rede Wi-Fi
+  // Conecta-se à rede Wi-Fi
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
-    Serial.print(".");
+    Serial.println("Conectando ao WiFi...");
   }
-  Serial.println();
-  Serial.println("Conectado à rede Wi-Fi");
 
-  // Inicialize o sensor DHT
-  dht.begin();
+  Serial.println("Conectado ao WiFi!");
+
+  delay(1000);
 }
 
 void loop() {
-  // Leia os valores de umidade e temperatura do sensor DHT11
-  float umidade = dht.readHumidity();
-  float temperatura = dht.readTemperature();
-  bool ninho = 1; // Exemplo de valor do ninho
-
-  // Verifique se a leitura do sensor foi bem-sucedida
-  if (isnan(umidade) || isnan(temperatura)) {
-    Serial.println("Falha ao ler os valores do sensor DHT11");
+  // Realiza a leitura do sensor DHT11
+  byte umidade = 0;
+  byte temperatura = 0;
+  int err = SimpleDHTErrSuccess;
+  if ((err = dht11.read(dht11Pin, &umidade, &temperatura, NULL)) != SimpleDHTErrSuccess) {
+    Serial.print("Falha na leitura do DHT11, err=");
+    Serial.println(err);
+    delay(2000);
     return;
   }
 
-  // Crie o JSON com os dados
+  // Valor fixo do ninho
+  int ninho = 1;
+
+  // Cria o JSON com os dados
   String jsonData = "{\"umidade\":" + String(umidade) + ",\"temperatura\":" + String(temperatura) + ",\"ninho\":" + String(ninho) + "}";
 
-  // Faça a solicitação POST
-  HTTPClient http;
-  http.begin(serverIP, serverPort, "/medicao"); // Substitua pelo seu path
-  http.addHeader("Content-Type", "application/json");
-  int statusCode = http.POST(jsonData);
+  // Realiza o POST dos dados para o servidor
+  WiFiClient client;
+  if (client.connect(serverURL, serverPort)) {
+    client.print("POST " + endpoint + " HTTP/1.1\r\n");
+    client.print("Host: " + String(serverURL) + "\r\n");
+    client.print("Content-Type: application/json\r\n");
+    client.print("Content-Length: " + String(jsonData.length()) + "\r\n"); // Coloca o 'jsonData' no .body
+    client.print("\r\n");
+    client.print(jsonData);
+    client.print("\r\n");
 
-  // Obtenha a resposta do servidor
-  String response = http.getString();
+    Serial.println("Dados enviados para o servidor!");
 
-  // Imprima os resultados
-  Serial.print("Código de status: ");
-  Serial.println(statusCode);
-  Serial.print("Resposta: ");
-  Serial.println(response);
+    client.stop();
+  } else {
+    Serial.println("Falha na conexão com o servidor!");
+  }
 
-  delay(5000); // Espere 5 segundos antes de fazer a próxima solicitação
+  delay(5000); // Espere 5 segundos antes de fazer a próxima leitura
 }
