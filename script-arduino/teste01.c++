@@ -53,7 +53,7 @@ void loop() {
   // Realiza o POST dos dados para o servidor
   WiFiClient client;
   if (client.connect(serverURL, serverPort)) {
-    client.print("POST " + endpoint + " HTTP/1.1\r\n");
+    client.print("POST " + serverUrl + ":" + serverPort + endpoint + " HTTP/1.1\r\n");
     client.print("Host: " + String(serverURL) + "\r\n");
     client.print("Content-Type: application/json\r\n");
     client.print("Content-Length: " + String(jsonData.length()) + "\r\n"); // Coloca o 'jsonData' no .body
