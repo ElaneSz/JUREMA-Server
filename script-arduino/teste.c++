@@ -1,3 +1,5 @@
+// Script que não está sendo utilizado!!
+
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include <SimpleDHT.h>
