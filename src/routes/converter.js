@@ -1,4 +1,4 @@
-const sqlite3 = require('sqlite3').verbose();
+/*const sqlite3 = require('sqlite3').verbose();
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;// Biblioteca para converter em arquivo .CSV
 
 const dbPath = 'database.sqlite'; // Caminho para o banco de dados SQLite3
@@ -37,3 +37,4 @@ db.all(query, (err, rows) => {
       db.close();
     });
 });
+*/
