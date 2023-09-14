@@ -111,13 +111,15 @@ router.get('/tabela', (req, res) => {
             </tbody>
           </table>
         </body>
+        <script>
+          setTimeout(() => window.location.reload(), 1000)
+        </script>
       </html>
     `;
-
     res.send(htmlTable);
   });
 });
 
 
-
+//setTimeout(() => window.location.reload(), 1000)
 module.exports = router;
