@@ -1,0 +1,77 @@
+<html>
+
+<head>
+    <title>Tabela de Medição</title>
+    <style>
+        /* Estilo para a tabela */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            border: 1px solid #ddd;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Estilo para as células de cabeçalho */
+        th {
+            background-color: #f2f2f2;
+            text-align: left;
+            padding: 8px;
+        }
+
+        /* Estilo para as células de dados */
+        td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Estilo para células de dados alternadas (para listas zebradas) */
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        /* Estilo para células de dados quando passa o mouse por cima */
+        tr:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Tabela de Medição</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Umidade</th>
+                <th>Temperatura</th>
+                <th>Ninho</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!--  -->
+        </tbody>
+    </table>
+</body>
+<script>
+    const tableBody = document.querySelector('tbody')
+    void async function () {
+        const response = await fetch('api')
+        const rows = await response.json()
+
+        rows.forEach(row => {
+            const tr = document.createElement('tr')
+            tr.innerHTML = `
+                <td>${row.id}</td>
+                <td>${row.umidade}</td>
+                <td>${row.temperatura}</td>
+                <td>${row.ninho}</td>
+                <td>${row.timestamp}</td>
+            `
+            tableBody.appendChild(tr)
+        })
+    }();
+</script>
+
+</html>
